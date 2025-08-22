@@ -53,3 +53,34 @@ a:focus-visible {
   transform-style: preserve-3d;
   will-change: transform;
 }
+
+/* Typing animation styles */
+.typing-animation {
+  animation: fadeInOut 2s ease-in-out infinite;
+}
+
+.typing-cursor {
+  animation: blink 1s infinite;
+  margin-left: 2px;
+}
+
+@keyframes fadeInOut {
+  0%, 45% {
+    opacity: 1;
+  }
+  50%, 95% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes blink {
+  0%, 50% {
+    opacity: 1;
+  }
+  51%, 100% {
+    opacity: 0;
+  }
+}

@@ -2,56 +2,70 @@
 
 import { useEffect, useState, useRef } from "react"
 
-function AnimatedDottedLine({ width = 1100 }) {
-  const [pathData, setPathData] = useState("")
-  // New state to track the position of the circle at the end of the line
+// The component now accepts a `scrollerRef` to be aware of the horizontal scroll position.
+function AnimatedDottedLine({ width = 1100, scrollerRef }) {
+  const [pathData, setPathData] = useState("");
   const [endPoint, setEndPoint] = useState({ x: width, y: 70 });
-  const svgRef = useRef(null)
+  const [dynamicStrokeWidth, setDynamicStrokeWidth] = useState(1.5);
+  const [dynamicRadius, setDynamicRadius] = useState(4);
 
-  // This ref will now hold an array of points, creating the "rope"
+  const svgRef = useRef(null);
   const pointsRef = useRef([]);
   const mousePos = useRef({ x: 0, y: 0 });
+  const smoothedProgress = useRef(0);
 
   useEffect(() => {
-    // --- Initialization ---
-    // Create the initial points for the line on mount
     const initialY = 70;
-    const segments = 50; // The number of points in our "rope"
+    const segments = 50;
     const segmentLength = width / segments;
     pointsRef.current = Array.from({ length: segments + 1 }, (_, i) => ({
       x: i * segmentLength,
       y: initialY,
     }));
-    setEndPoint({ x: width, y: initialY }); // Set initial end point
+    setEndPoint({ x: width, y: initialY });
 
-    // --- Event Listener ---
     const handleMouseMove = (event) => {
       mousePos.current = { x: event.clientX, y: event.clientY }
     }
     window.addEventListener("mousemove", handleMouseMove)
 
-    // --- Animation Loop ---
     let rafId
     const animate = () => {
       if (svgRef.current) {
         const svgRect = svgRef.current.getBoundingClientRect()
-        // The target Y position is the mouse's Y relative to the SVG
+        
         const targetY = mousePos.current.y - svgRect.top;
-
-        // The last point of the line (the "leader") smoothly follows the mouse
         const leader = pointsRef.current[pointsRef.current.length - 1];
-        const interpolationFactor = 0.05; // Controls how fast the end follows the mouse
+        const interpolationFactor = 0.05;
         leader.y += (targetY - leader.y) * interpolationFactor;
 
-        // Each subsequent point smoothly follows the point in front of it
-        const followFactor = 0.5; // Controls the "stiffness" of the rope
+        const followFactor = 0.5;
         for (let i = pointsRef.current.length - 2; i >= 0; i--) {
           const point = pointsRef.current[i];
           const nextPoint = pointsRef.current[i + 1];
           point.y += (nextPoint.y - point.y) * followFactor;
         }
 
-        // Convert the points array into an SVG path string
+        // --- THE FIX: Adjust targetX with the container's scroll position ---
+        const scrollOffset = scrollerRef?.current?.scrollLeft || 0;
+        const targetX = (mousePos.current.x - svgRect.left) + scrollOffset;
+        
+        const progress = Math.max(0, Math.min(1, targetX / width));
+
+        const smoothingFactor = 0.08;
+        smoothedProgress.current += (progress - smoothedProgress.current) * smoothingFactor;
+
+        const maxStrokeWidth = 3;
+        const minStrokeWidth = 0.5;
+        const maxRadius = 7;
+        const minRadius = 2;
+
+        const newStrokeWidth = maxStrokeWidth - (smoothedProgress.current * (maxStrokeWidth - minStrokeWidth));
+        const newRadius = maxRadius - (smoothedProgress.current * (maxRadius - minRadius));
+        
+        setDynamicStrokeWidth(newStrokeWidth);
+        setDynamicRadius(newRadius);
+
         const newPathData = "M " + pointsRef.current.map(p => `${p.x},${p.y}`).join(" L ");
         setPathData(newPathData);
         setEndPoint({ x: leader.x, y: leader.y });
@@ -60,12 +74,11 @@ function AnimatedDottedLine({ width = 1100 }) {
     }
     rafId = requestAnimationFrame(animate)
 
-    // --- Cleanup ---
     return () => {
       window.removeEventListener("mousemove", handleMouseMove)
       cancelAnimationFrame(rafId)
     }
-  }, [width]) // Rerun effect if width changes
+  }, [width, scrollerRef]) // Add scrollerRef to dependencies
 
   const height = 140
 
@@ -81,20 +94,18 @@ function AnimatedDottedLine({ width = 1100 }) {
         mixBlendMode: "multiply",
       }}
     >
-      {/* The main line path */}
       <path
         d={pathData}
         fill="none"
         stroke="black"
-        strokeWidth="1"
+        strokeWidth={dynamicStrokeWidth}
         strokeLinecap="round"
         opacity={0.9}
       />
-      {/* The circle at the end of the line */}
       <circle
         cx={endPoint.x}
         cy={endPoint.y}
-        r="4" // Radius of the circle
+        r={dynamicRadius}
         fill="black"
         opacity={0.9}
       />

@@ -6,12 +6,14 @@ import WhoWeAre from './@scroll-components/WhoWeAre';
 import WhatWeDo from './@scroll-components/WhatWeDo';
 import EventsCulture from './@scroll-components/EventsCulture';
 import JoinUs from './@scroll-components/JoinUs';
+import ParallaxImage from './@scroll-components/ParallaxImage';
 import AnimatedDottedLine from './@scroll-components/AnimatedDottedLine';
 import Logo from './Logo';
 
 // Import the TimelineCard component and the dummy data
 import TimelineCard from './@Timeline-Cards/TimelineCard1';
 import { timelineData } from '../Data/Timelinedata'; // Adjust path if needed
+import ImageTrail from './@Timeline-Cards/ImageTrail';
 
 function HorizontalScroll() {
   const lineContainerRef = useRef(null);
@@ -56,11 +58,13 @@ function HorizontalScroll() {
 
   return (
     <div className="relative h-screen overflow-hidden bg-white text-black">
+      <div className='absolute left-8 top-8'><Logo/></div>
       <div
         ref={lineContainerRef}
-        className="pointer-events-none absolute bottom-20 left-0 z-40  w-full"
+        className="pointer-events-none absolute bottom-20 left-0 z-40 w-full"
       >
-        <AnimatedDottedLine />
+        {/* Pass the scrollerRef to the AnimatedDottedLine component */}
+        <AnimatedDottedLine scrollerRef={scrollContainerRef} />
       </div>
 
       {/* Attach the ref to the scrolling container here. */}
@@ -68,10 +72,10 @@ function HorizontalScroll() {
         <div className="flex h-full" style={{ width: 'max-content' }}>
           <Intro />
           <WhoWeAre />
-
+        
           {/* Cinematic timeline rail with airy spacing and straight alignment */}
-          <div className="flex items-center scale-[0.6] pt-10">
-            <div className="flex w-full items-start space-x-[300px]">
+          <div className="flex  items-center scale-[0.7] pt-10">
+            <div className="flex w-full items-start  space-x-[300px]">
               {timelineData.map((item) => (
                 <TimelineCard
                   key={item.id}
@@ -91,9 +95,13 @@ function HorizontalScroll() {
               ))}
             </div>
           </div>
-
-          <WhatWeDo />
-          <EventsCulture />
+            
+          {/* <WhatWeDo /> */}
+          {/* <EventsCulture /> */}
+          
+          {/* Parallax Image Section */}
+          <ParallaxImage scrollerRef={scrollContainerRef} imgSrc={'../public/tkn-logo.jpg'} />
+          
           <JoinUs />
         </div>
       </div>

@@ -1,6 +1,11 @@
+import ImageTrail from "../@Timeline-Cards/ImageTrail"
+
 function JoinUs() {
   return (
-    <div className="min-w-screen h-full flex items-center justify-center px-8">
+    <div className="min-w-screen relative h-full flex items-center justify-center px-8">
+       <div className='absolute top-0 right-0 h-full w-full z-20'>
+        <ImageTrail />
+      </div>
       <div className="text-center max-w-4xl">
         <h2 className="text-6xl md:text-8xl font-light mb-8">
           Join Us
