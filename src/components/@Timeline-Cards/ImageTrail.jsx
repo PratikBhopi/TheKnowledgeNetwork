@@ -2,32 +2,26 @@
 
 import React, { useRef, useEffect } from 'react';
 import gsap from 'gsap';
-import { throttle } from 'lodash'; // A utility for throttling function calls
+import { throttle } from 'lodash';
 
-// You can replace these with your own image URLs
-// const imageUrls = [
-//   "https://placehold.co/90x90/E63946/FFFFFF?text=1",
-//   "https://placehold.co/90x90/F1FAEE/000000?text=2",
-//   "https://placehold.co/90x90/A8DADC/FFFFFF?text=3",
-//   "https://placehold.co/90x90/457B9D/FFFFFF?text=4",
-//   "https://placehold.co/90x90/1D3557/FFFFFF?text=5",
-//   "https://placehold.co/90x90/F4A261/FFFFFF?text=6",
-//   "https://placehold.co/90x90/2A9D8F/FFFFFF?text=7",
-// ];
-const imageUrls=[
-  '../public/tkn-logo.jpg',
-  '../public/tkn-logo.jpg',
-  '../public/tkn-logo.jpg'
-]
+// Corrected image paths for use with the `public` directory
+const imageUrls = [
+  '/tkn-logo.jpg',
+  '/tkn-logo.jpg',
+  '/tkn-logo.jpg'
+];
 
 function ImageTrail() {
   const containerRef = useRef(null);
   const lastPosRef = useRef({ x: 0, y: 0 });
+  // A ref to keep track of the currently visible image elements
+  const activeImagesRef = useRef([]);
 
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
 
+    // --- Throttled Image Creation Function ---
     const showImage = throttle((e) => {
       const currentPos = { x: e.offsetX, y: e.offsetY };
       const deltaX = currentPos.x - lastPosRef.current.x;
@@ -35,49 +29,56 @@ function ImageTrail() {
       const rotation = Math.max(-maxRotation, Math.min(maxRotation, deltaX * 0.1));
       lastPosRef.current = currentPos;
 
+      // --- Limit the number of active images ---
+      const maxImages = 6;
+      if (activeImagesRef.current.length >= maxImages) {
+        // If the limit is reached, remove the oldest image
+        const oldestImage = activeImagesRef.current.shift();
+        gsap.to(oldestImage, {
+          opacity: 0,
+          scale: 0.5,
+          duration: 0.3,
+          ease: 'power2.in',
+          onComplete: () => {
+            if (oldestImage.parentNode === container) {
+              container.removeChild(oldestImage);
+            }
+          }
+        });
+      }
+
+      // --- Create and Animate the New Image ---
       const imageDiv = document.createElement('div');
       const img = document.createElement('img');
 
       imageDiv.className = "w-[180px] h-[180px] rounded-lg overflow-hidden shadow-xl absolute pointer-events-none";
       img.className = "w-full h-full object-cover";
       img.src = imageUrls[Math.floor(Math.random() * imageUrls.length)];
-      
-      // --- THE FIX ---
-      // Set the initial position and visibility directly on the element's style
-      // This ensures it's created at the correct spot but is invisible.
+
+      // Set the final position of the element before adding it to the DOM
       gsap.set(imageDiv, {
         position: 'absolute',
-        left: currentPos.x - 45, // Center the image
-        top: currentPos.y - 45,
-        opacity: 0,
-        scale: 0,
-        rotation: rotation - 10,
+        left: currentPos.x - 90, // Center based on new 180px size
+        top: currentPos.y - 90,
+        rotation: rotation, // Set the final rotation
       });
 
       imageDiv.appendChild(img);
       container.appendChild(imageDiv);
 
-      // Animate from the initial state to the final state
-      gsap.timeline({
-        onComplete: () => {
-          container.removeChild(imageDiv);
-        }
-      })
-      .to(imageDiv, {
-        opacity: 1,
-        scale: 1,
-        rotation: rotation,
-        duration: 0.4,
-        ease: 'power3.out',
-      })
-      .to(imageDiv, {
-        opacity: 0,
-        scale: 0.8,
-        duration: 0.6,
-        ease: 'power2.in',
-      }, "+=0.8");
+      activeImagesRef.current.push(imageDiv);
 
-    }, 150);
+      // --- THE FIX: Use gsap.from() for a direct pop-in animation ---
+      // This animates FROM the specified values TO the current state we just set.
+      gsap.from(imageDiv, {
+        opacity: 0,
+        scale: 0,
+        rotation: rotation - 10, // Animate from a slightly different rotation
+        duration: 2,
+        ease: 'power3.out',
+      });
+
+    }, 200); // Throttle: Increased to 200ms for a less crowded feel
 
     const handleMouseMove = (e) => {
       showImage(e);
