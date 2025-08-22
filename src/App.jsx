@@ -3,6 +3,7 @@ import BottomBar from './components/BottomBar'
 import FirstPage from './components/FirstPage'
 import HorizontalScroll from './components/HorizontalScroll'
 import Logo from './components/Logo'
+import StoryScroller from './components/StoryScroller'
 
 function App() {
   const [showHorizontalScroll, setShowHorizontalScroll] = useState(false)
@@ -42,6 +43,7 @@ function App() {
       {/* Horizontal Scrolling Section */}
       {showHorizontalScroll && (
         <HorizontalScroll />
+        // <StoryScroller />
       )}
     </div>
   )

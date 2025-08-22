@@ -2,86 +2,71 @@
 
 import { useEffect, useState, useRef } from "react"
 
-function AnimatedDottedLine() {
+function AnimatedDottedLine({ width = 1100 }) {
   const [pathData, setPathData] = useState("")
+  // New state to track the position of the circle at the end of the line
+  const [endPoint, setEndPoint] = useState({ x: width, y: 70 });
   const svgRef = useRef(null)
 
-  // Use refs to store positions to avoid re-renders on every mouse move
-  const mousePos = useRef({ x: -999, y: -999 }) // Start off-screen
-  const animatedMousePos = useRef({ x: -999, y: -999 })
+  // This ref will now hold an array of points, creating the "rope"
+  const pointsRef = useRef([]);
+  const mousePos = useRef({ x: 0, y: 0 });
 
   useEffect(() => {
+    // --- Initialization ---
+    // Create the initial points for the line on mount
+    const initialY = 70;
+    const segments = 50; // The number of points in our "rope"
+    const segmentLength = width / segments;
+    pointsRef.current = Array.from({ length: segments + 1 }, (_, i) => ({
+      x: i * segmentLength,
+      y: initialY,
+    }));
+    setEndPoint({ x: width, y: initialY }); // Set initial end point
+
+    // --- Event Listener ---
     const handleMouseMove = (event) => {
       mousePos.current = { x: event.clientX, y: event.clientY }
     }
-
     window.addEventListener("mousemove", handleMouseMove)
 
+    // --- Animation Loop ---
     let rafId
-    const startTime = performance.now() // Record the start time for the wave animation
-
-    // Animation loop to smoothly update the line
     const animate = () => {
-      // Calculate elapsed time for the continuous wave motion
-      const elapsed = (performance.now() - startTime) / 1000
-
       if (svgRef.current) {
         const svgRect = svgRef.current.getBoundingClientRect()
-        const targetX = mousePos.current.x - svgRect.left
+        // The target Y position is the mouse's Y relative to the SVG
+        const targetY = mousePos.current.y - svgRect.top;
 
-        // Smoothly interpolate the animated position towards the target
-        const interpolationFactor = 0.07
-        animatedMousePos.current.x +=
-          (targetX - animatedMousePos.current.x) * interpolationFactor
+        // The last point of the line (the "leader") smoothly follows the mouse
+        const leader = pointsRef.current[pointsRef.current.length - 1];
+        const interpolationFactor = 0.05; // Controls how fast the end follows the mouse
+        leader.y += (targetY - leader.y) * interpolationFactor;
 
-        // --- Path Generation ---
-        const width = 900
-        const initialY = 70
-
-        // 1. Settings for the default waving motion
-        const waveAmplitude = 4 // Small amplitude for a subtle effect
-        const waveLength = 250 // Longer wavelength for smoother curves
-        const waveSpeed = 0.3 // Slower speed for a gentle motion
-
-        // 2. Settings for the cursor interaction
-        const bumpAmplitude = 20
-        const bumpSpread = 150
-
-        const points = []
-        for (let x = 0; x <= width; x += 10) {
-          // Calculate the default waving motion using a sine wave
-          const wave =
-            waveAmplitude * Math.sin(x / waveLength + elapsed * waveSpeed)
-
-          // Calculate the cursor "bump" using a Gaussian function
-          const bump =
-            bumpAmplitude *
-            Math.exp(
-              -Math.pow(x - animatedMousePos.current.x, 2) /
-                (2 * Math.pow(bumpSpread, 2))
-            )
-
-          // Combine the two effects
-          const y = initialY + wave - bump
-          points.push(`${x},${y}`)
+        // Each subsequent point smoothly follows the point in front of it
+        const followFactor = 0.5; // Controls the "stiffness" of the rope
+        for (let i = pointsRef.current.length - 2; i >= 0; i--) {
+          const point = pointsRef.current[i];
+          const nextPoint = pointsRef.current[i + 1];
+          point.y += (nextPoint.y - point.y) * followFactor;
         }
 
-        setPathData(`M ${points.join(" L ")}`)
+        // Convert the points array into an SVG path string
+        const newPathData = "M " + pointsRef.current.map(p => `${p.x},${p.y}`).join(" L ");
+        setPathData(newPathData);
+        setEndPoint({ x: leader.x, y: leader.y });
       }
-
       rafId = requestAnimationFrame(animate)
     }
-
     rafId = requestAnimationFrame(animate)
 
-    // Cleanup function
+    // --- Cleanup ---
     return () => {
       window.removeEventListener("mousemove", handleMouseMove)
       cancelAnimationFrame(rafId)
     }
-  }, [])
+  }, [width]) // Rerun effect if width changes
 
-  const width = 600
   const height = 140
 
   return (
@@ -90,15 +75,28 @@ function AnimatedDottedLine() {
       width={width}
       height={height}
       viewBox={`0 0 ${width} ${height}`}
-      style={{ overflow: "visible", cursor: "pointer" }}
+      style={{
+        overflow: "visible",
+        cursor: "pointer",
+        mixBlendMode: "multiply",
+      }}
     >
+      {/* The main line path */}
       <path
         d={pathData}
         fill="none"
-        stroke="#0c0c0c"
+        stroke="black"
         strokeWidth="1"
-        strokeLinecap="round"k
-        opacity={0.4}
+        strokeLinecap="round"
+        opacity={0.9}
+      />
+      {/* The circle at the end of the line */}
+      <circle
+        cx={endPoint.x}
+        cy={endPoint.y}
+        r="4" // Radius of the circle
+        fill="black"
+        opacity={0.9}
       />
     </svg>
   )

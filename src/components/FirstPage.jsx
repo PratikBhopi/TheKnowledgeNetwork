@@ -6,7 +6,7 @@ function FirstPage({ onGoClick }) {
     <div className="h-full flex flex-col relative">
       {/* Top Section with Years */}
       <div className="flex justify-between items-start pt-8 px-8">
-        <span className=""><Logo/></span>
+        {/* <span className=""><Logo/></span> */}
         <div className="w-16 h-px bg-black"></div>
         <span className="text-2xl font-light">2025</span>
       </div>
