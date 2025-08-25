@@ -2,8 +2,11 @@
 
 import { useEffect, useState, useRef } from "react"
 
-// The component now accepts a `scrollerRef` to be aware of the horizontal scroll position.
-function AnimatedDottedLine({ width = 1100, scrollerRef }) {
+// The component no longer needs a `width` prop. It calculates its own width.
+function AnimatedDottedLine({ scrollerRef }) {
+  // State to hold the dynamic width of the SVG, initialized to 80% of the window width.
+  const [width, setWidth] = useState(window.innerWidth * 0.8);
+  
   const [pathData, setPathData] = useState("");
   const [endPoint, setEndPoint] = useState({ x: width, y: 70 });
   const [dynamicStrokeWidth, setDynamicStrokeWidth] = useState(1.5);
@@ -14,9 +17,22 @@ function AnimatedDottedLine({ width = 1100, scrollerRef }) {
   const mousePos = useRef({ x: 0, y: 0 });
   const smoothedProgress = useRef(0);
 
+  // This effect listens for window resize events to keep the line responsive.
+  useEffect(() => {
+    const handleResize = () => {
+      setWidth(window.innerWidth * 0.8);
+    };
+
+    window.addEventListener('resize', handleResize);
+    
+    // Cleanup function to remove the event listener
+    return () => window.removeEventListener('resize', handleResize);
+  }, []); // Empty dependency array ensures this runs only once.
+
   useEffect(() => {
     const initialY = 70;
     const segments = 50;
+    // All calculations now use the dynamic `width` from the state.
     const segmentLength = width / segments;
     pointsRef.current = Array.from({ length: segments + 1 }, (_, i) => ({
       x: i * segmentLength,
@@ -46,7 +62,6 @@ function AnimatedDottedLine({ width = 1100, scrollerRef }) {
           point.y += (nextPoint.y - point.y) * followFactor;
         }
 
-        // --- THE FIX: Adjust targetX with the container's scroll position ---
         const scrollOffset = scrollerRef?.current?.scrollLeft || 0;
         const targetX = (mousePos.current.x - svgRect.left) + scrollOffset;
         
@@ -78,7 +93,7 @@ function AnimatedDottedLine({ width = 1100, scrollerRef }) {
       window.removeEventListener("mousemove", handleMouseMove)
       cancelAnimationFrame(rafId)
     }
-  }, [width, scrollerRef]) // Add scrollerRef to dependencies
+  }, [width, scrollerRef]) // `width` is now a dependency to regenerate the line on resize.
 
   const height = 140
 

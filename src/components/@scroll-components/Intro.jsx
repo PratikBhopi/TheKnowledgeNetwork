@@ -14,19 +14,20 @@ function Intro() {
           <div className='h-40'>
 
           </div>
-          <div className="space-y-4 text-gray-700 text-center md:text-lg">
+          <div className="space-y-4 text-left md:text-lg">
             <p>
-              When someone asked, “you guys want a website?”, we said “Sure! But what’s a website?”
-              Now we know. Follow along as we share how The Knowledge Network came to be and where we are headed next.
-            </p>
+             Every journey begins with a spark — one idea, a quiet thought, shared by a friend and carried forward by a few dreamers.<br/>
+            Together, they gathered not just to learn, but to laugh, to create, and to experience life beyond the ordinary.     <br/>
+            From those small beginnings grew a community — a circle of curiosity and wonder, where stories unfold and growth is a shared adventure.
+         </p>
           </div>
         </div>
       </div>
 
       {/* Right column placeholder for image (user will add) */}
       <div className="flex-1 flex items-center justify-center">
-        <div className="w-[80%] aspect-[4/3] border border-dashed border-gray-300 rounded-xl flex items-center justify-center text-gray-400">
-          Add your image here
+        <div className="w-[80%] aspect-[4/3] rounded-xl flex items-center justify-center text-gray-400">
+          <img  className=" w-full" src="https://res.cloudinary.com/due7t0ksr/image/upload/v1756144673/TKN_LOGO_PNG_a930pp.png" alt="" />
         </div>
       </div>
     </div>

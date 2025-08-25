@@ -4,6 +4,7 @@ import FirstPage from './components/FirstPage'
 import HorizontalScroll from './components/HorizontalScroll'
 import Logo from './components/Logo'
 import StoryScroller from './components/StoryScroller'
+import JoinUs from './components/@scroll-components/JoinUs'
 
 function App() {
   const [showHorizontalScroll, setShowHorizontalScroll] = useState(false)
@@ -33,6 +34,7 @@ function App() {
     return () => container.removeEventListener('wheel', handleWheel)
   }, [showHorizontalScroll])
 
+  //bg-[#F2F2F2]
   return (
     <div className="h-screen bg-white text-black overflow-hidden">
       {/* First Page - Clean, Minimal Design */}

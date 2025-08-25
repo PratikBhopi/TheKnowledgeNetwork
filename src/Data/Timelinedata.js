@@ -1,70 +1,74 @@
 // src/timelineData.js
 
-// An array of objects, where each object represents a timeline card.
 export const timelineData = [
-    {
-      id: 1,
-      imgSrc: "https://placehold.co/720x480/111111/ffffff?text=Event+One",
-      title: "Letterhead and Logo 9 by Rockport",
-      description: [
-        "We submitted several brands under Bürocratik to the Rockport Logos & Letterheads 9 book. Two were accepted.",
-        "On the final submission day, we hand-delivered the envelope to DHL, ensuring it arrived on time."
-      ],
-      size: 'md',
-      offsetY: 60,
-      rotateDeg: 0,
-      mediaShape: 'landscape',
-    },
-    {
-      id: 2,
-      imgSrc: "https://placehold.co/600x600/444444/ffffff?text=Event+Two",
-      title: "Launch of Our First Major Project",
-      description: [
-        "After months of hard work, we successfully launched a groundbreaking new platform for a major client in the tech industry.",
-        "The launch was a huge success, garnering positive media attention and user feedback."
-      ],
-      size: 'sm',
-      offsetY: -90,
-      rotateDeg: 0,
-      mediaShape: 'square',
-    },
-    {
-      id: 3,
-      imgSrc: "https://placehold.co/600x600/888888/ffffff?text=Event+Three",
-      title: "Expansion into a New Market",
-      description: [
-        "We opened our first international office, marking a significant milestone in our company's growth and global reach."
-      ],
-      size: 'sm',
-      offsetY: 120,
-      rotateDeg: 0,
-      mediaShape: 'square',
-    },
-    {
-      id: 4,
-      imgSrc: "https://placehold.co/720x480/222222/ffffff?text=Event+Four",
-      title: "Community Hackathon",
-      description: [
-        "Bringing together creators and engineers for a weekend of building and sharing.",
-        "New friendships, projects, and ideas were born."
-      ],
-      size: 'md',
-      offsetY: -120,
-      rotateDeg: 0,
-      mediaShape: 'landscape',
-    },
-    {
-      id: 5,
-      imgSrc: "https://placehold.co/720x480/666666/ffffff?text=Event+Five",
-      title: "Podcast Season Premiere",
-      description: [
-        "Our premiere episode featured conversations with makers across disciplines.",
-        "A celebration of knowledge, craft, and culture."
-      ],
-      size: 'sm',
-      offsetY: 140,
-      rotateDeg: 0,
-      mediaShape: 'landscape',
-    },
+  {
+    id: 1,
+    imgSrc: "https://res.cloudinary.com/due7t0ksr/image/upload/v1756144676/First-event_qn8ze5.jpg",
+    videoSrc: "https://res.cloudinary.com/due7t0ksr/video/upload/v1756144679/First-Event_cdinpi.mp4",
+    title: "First Music Jam!",
+    description: [
+      "Our very first musical gathering — a stage for voices, instruments, and pure creativity.",
+      "A night of rhythm, connection, and the beginning of many more cultural vibes at TKN."
+    ],
+    size: 'md',
+    offsetY: 60,
+    rotateDeg: 0,
+    mediaShape: 'landscape',
+  },
+  {
+    id: 2,
+    imgSrc: "https://res.cloudinary.com/due7t0ksr/image/upload/v1756144674/C-Bootcamp_ahmc6q.jpg",
+    videoSrc: "https://res.cloudinary.com/due7t0ksr/video/upload/v1756144680/C-Bootcamp_hokaea.mp4",
+    title: "C- Programming Bootcamp",
+    description: [
+      "A hands-on coding journey where beginners explored the power of C programming.",
+      "From syntax to solving real problems, it was the first step into the coding world."
+    ],
+    size: 'sm',
+    offsetY: -90,
+    rotateDeg: 0,
+    mediaShape: 'square',
+  },
+  {
+    id: 3,
+    imgSrc: "https://res.cloudinary.com/due7t0ksr/image/upload/v1756144674/web-crafters_rfbpvy.png",
+    videoSrc: "https://res.cloudinary.com/due7t0ksr/video/upload/v1756144675/web-crafter_esq2bo.mp4",
+    title: "Web Crafters",
+    description: [
+      "A creative challenge where participants built clones of popular websites using HTML & CSS.",
+      "An event to sharpen front-end skills, push creativity, and learn by doing."
+    ],
+    size: 'sm',
+    offsetY: 120,
+    rotateDeg: 0,
+    mediaShape: 'square',
+  },
+  {
+    id: 4,
+    imgSrc: "https://res.cloudinary.com/due7t0ksr/image/upload/v1756144673/Podcast-team_lsqymk.png",
+    videoSrc: "https://res.cloudinary.com/due7t0ksr/video/upload/v1756144677/TKN-Podcast_lhgwee.mp4",
+    title: "Placement Talks",
+    description: [
+      "A podcast-style session filled with stories, strategies, and lessons from placements.",
+      "Helping juniors prepare with insights, tips, and confidence for the road ahead."
+    ],
+    size: 'md',
+    offsetY: -120,
+    rotateDeg: 0,
+    mediaShape: 'landscape',
+  },
+  {
+    id: 5,
+    imgSrc: "https://res.cloudinary.com/due7t0ksr/image/upload/v1756144673/MusicJam-tkn_qxc23u.jpg",
+    videoSrc: "https://res.cloudinary.com/due7t0ksr/video/upload/v1756144674/music-jam_gyws9b.mp4",
+    title: "Music Jam Session",
+    description: [
+      "Another vibrant evening of beats, rhythm, and togetherness.",
+      "A cultural space to celebrate creativity, talent, and the joy of music."
+    ],
+    size: 'lg',
+    offsetY: 140,
+    rotateDeg: 0,
+    mediaShape: 'landscape',
+  },
 ];
-  

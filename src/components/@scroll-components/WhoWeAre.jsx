@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import ImageTrail from '../@Timeline-Cards/ImageTrail'; // Adjusted import path
+import ImageTrail from '../@Cards/ImageTrail'; // Adjusted import path
 
 function WhoWeAre() {
   const words = ["Laugh.", "Learn.", "Lead.", "Level up.", "Liberate."];

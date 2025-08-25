@@ -6,7 +6,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 gsap.registerPlugin(ScrollTrigger);
 
 // The component now accepts a `scrollerRef` prop to correctly bind the animation.
-function TimelineCard({ imgSrc, title, children, size = 'md', offsetY = 0, rotateDeg = 0, mediaShape = 'landscape', scrollerRef }) {
+function TimelineCard({ imgSrc, title, children, size = 'md', offsetY = 0, rotateDeg = 0, mediaShape = 'landscape', scrollerRef, onMediaClick, isClickable = false }) {
   const cardRef = useRef(null);
 
   // This effect creates the "pop-up" animation when the card scrolls into view.
@@ -63,7 +63,13 @@ function TimelineCard({ imgSrc, title, children, size = 'md', offsetY = 0, rotat
     >
       <div className="bg-white overflow-hidden transition-transform duration-300 hover:-translate-y-0.5 border-l-2 border-gray-300 rounded-none">
         {mediaShape === 'square' ? (
-          <div className="relative w-full" style={{ paddingBottom: '100%' }}>
+          <div
+            className={`relative w-full ${isClickable ? 'cursor-pointer group' : ''}`}
+            style={{ paddingBottom: '100%' }}
+            onClick={isClickable ? onMediaClick : undefined}
+            role={isClickable ? 'button' : undefined}
+            tabIndex={isClickable ? 0 : undefined}
+          >
             {imgSrc ? (
               <img src={imgSrc} alt={title} className="absolute inset-0 h-full w-full object-cover" />
             ) : (
@@ -71,14 +77,38 @@ function TimelineCard({ imgSrc, title, children, size = 'md', offsetY = 0, rotat
                 Your Image Here
               </div>
             )}
+            {isClickable && (
+              <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                <div className="w-14 h-14 rounded-full bg-white/90 flex items-center justify-center shadow">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" className="text-black ml-0.5">
+                    <path d="M8 5v14l11-7z"></path>
+                  </svg>
+                </div>
+              </div>
+            )}
           </div>
         ) : (
-          <div className="w-full" style={{ height: mediaHeight }}>
+          <div
+            className={`w-full relative ${isClickable ? 'cursor-pointer group' : ''}`}
+            style={{ height: mediaHeight }}
+            onClick={isClickable ? onMediaClick : undefined}
+            role={isClickable ? 'button' : undefined}
+            tabIndex={isClickable ? 0 : undefined}
+          >
             {imgSrc ? (
               <img src={imgSrc} alt={title} className="h-full w-full object-cover" />
             ) : (
               <div className="flex h-full w-full items-center justify-center bg-gray-50 text-gray-400">
                 Your Image Here
+              </div>
+            )}
+            {isClickable && (
+              <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                <div className="w-14 h-14 rounded-full bg-white/90 flex items-center justify-center shadow">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" className="text-black ml-0.5">
+                    <path d="M8 5v14l11-7z"></path>
+                  </svg>
+                </div>
               </div>
             )}
           </div>
@@ -87,7 +117,7 @@ function TimelineCard({ imgSrc, title, children, size = 'md', offsetY = 0, rotat
         <div className="relative p-5">
           <div className="absolute left-0 top-5 -translate-x-1 flex items-center">
             <div className="h-2.5 w-2.5 rounded-full bg-black" />
-            <div className="ml-2 h-px w-7 bg-gray-300" />
+            <div className="ml-2 h-px w-7" />
           </div>
           <h2 className="ml-6 text-xl md:text-2xl font-light leading-tight text-black">
             {title}

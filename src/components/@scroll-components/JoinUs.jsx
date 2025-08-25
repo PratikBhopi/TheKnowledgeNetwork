@@ -1,8 +1,12 @@
-import ImageTrail from "../@Timeline-Cards/ImageTrail"
+import ImageTrail from "../@Cards/ImageTrail"
+import RotatingBadge from "../@Cards/RotatingBadge"
 
 function JoinUs() {
   return (
     <div className="min-w-screen relative h-full flex items-center justify-center px-8">
+      {/* <div className="absolute right-8 top-8 scale-[0.5] opacity-[0.5]">
+          <RotatingBadge/>
+      </div> */}
        <div className='absolute top-0 right-0 h-full w-full z-20'>
         <ImageTrail />
       </div>

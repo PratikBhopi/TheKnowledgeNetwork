@@ -1,4 +1,4 @@
-import { useRef, useLayoutEffect, useEffect } from 'react';
+import { useRef, useLayoutEffect, useEffect, useState } from 'react';
 import gsap from 'gsap';
 import BottomBar from './BottomBar';
 import Intro from './@scroll-components/Intro';
@@ -11,14 +11,15 @@ import AnimatedDottedLine from './@scroll-components/AnimatedDottedLine';
 import Logo from './Logo';
 
 // Import the TimelineCard component and the dummy data
-import TimelineCard from './@Timeline-Cards/TimelineCard1';
+import TimelineCard from './@Cards/TimelineCard1';
 import { timelineData } from '../Data/Timelinedata'; // Adjust path if needed
-import ImageTrail from './@Timeline-Cards/ImageTrail';
+import ImageTrail from './@Cards/ImageTrail';
 
 function HorizontalScroll() {
   const lineContainerRef = useRef(null);
   // Create a ref for the main horizontal scrolling container.
   const scrollContainerRef = useRef(null);
+  const [activeVideo, setActiveVideo] = useState(null);
 
   useLayoutEffect(() => {
     const animation = gsap.to(lineContainerRef.current, {
@@ -57,7 +58,7 @@ function HorizontalScroll() {
   }, []);
 
   return (
-    <div className="relative h-screen overflow-hidden bg-white text-black">
+    <div className="relative h-screen overflow-hidden text-black">
       <div className='absolute left-8 top-8'><Logo/></div>
       <div
         ref={lineContainerRef}
@@ -67,6 +68,28 @@ function HorizontalScroll() {
         <AnimatedDottedLine scrollerRef={scrollContainerRef} />
       </div>
 
+      {/* Video Modal Overlay */}
+      {activeVideo && (
+        <div
+          className="fixed inset-0 z-[100] bg-black/70 flex items-center justify-center p-4"
+          onClick={() => setActiveVideo(null)}
+        >
+          <div
+            className="relative bg-black rounded-lg overflow-hidden w-full max-w-4xl aspect-video"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <video src={activeVideo} className="w-full h-full" controls autoPlay />
+            <button
+              aria-label="Close"
+              className="absolute -top-10 right-0 text-white text-sm"
+              onClick={() => setActiveVideo(null)}
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Attach the ref to the scrolling container here. */}
       <div ref={scrollContainerRef} className="h-full overflow-y-hidden overflow-x-auto scrollbar-hide will-change-transform">
         <div className="flex h-full" style={{ width: 'max-content' }}>
@@ -74,7 +97,7 @@ function HorizontalScroll() {
           <WhoWeAre />
         
           {/* Cinematic timeline rail with airy spacing and straight alignment */}
-          <div className="flex  items-center scale-[0.7] pt-10">
+          <div className="flex  items-center scale-[0.8] pt-10">
             <div className="flex w-full items-start  space-x-[300px]">
               {timelineData.map((item) => (
                 <TimelineCard
@@ -87,6 +110,8 @@ function HorizontalScroll() {
                   offsetY={item.offsetY}
                   rotateDeg={item.rotateDeg}
                   mediaShape={item.mediaShape}
+                  isClickable={Boolean(item.videoSrc)}
+                  onMediaClick={() => item.videoSrc && setActiveVideo(item.videoSrc)}
                 >
                   {item.description.map((paragraph, pIndex) => (
                     <p key={pIndex}>{paragraph}</p>
@@ -102,7 +127,7 @@ function HorizontalScroll() {
           {/* Parallax Image Section */}
           <ParallaxImage scrollerRef={scrollContainerRef} imgSrc={'../public/tkn-logo.jpg'} />
           
-          <JoinUs />
+          <JoinUs  />
         </div>
       </div>
 
