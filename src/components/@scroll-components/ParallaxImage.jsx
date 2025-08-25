@@ -3,6 +3,9 @@ import gsap from 'gsap';
 
 // The component now accepts an `imgSrc` prop for the background image.
 function ParallaxImage({ scrollerRef, imgSrc }) {
+
+  const vidSrc='https://res.cloudinary.com/due7t0ksr/video/upload/v1756146527/Hiring_gymoxo.mp4' || imgSrc;
+  // const vidSrc='https://res.cloudinary.com/due7t0ksr/video/upload/v1756146259/Turf-Night-TKN_jz59iy.mp4' || imgSrc;
   const parallaxRef = useRef(null);
   const backgroundRef = useRef(null);
   const floatingElementsRef = useRef(null);
@@ -75,14 +78,38 @@ function ParallaxImage({ scrollerRef, imgSrc }) {
       {/* Background container now holds both the image and the gradient overlay */}
       <div 
         ref={backgroundRef}
-        className="absolute inset-0"
+        className="absolute inset-0 flex"
       >
-        {/* The new background image */}
-        <img 
-          src={imgSrc || 'https://placehold.co/1920x1080/000000/FFFFFF?text=Background'} 
-          alt="Parallax background"
-          className="absolute inset-0 w-full h-full object-cover"
+        {/* First video - takes up 1/3 of the height */}
+        <video 
+          src={'https://res.cloudinary.com/due7t0ksr/video/upload/v1756146883/web-crafter-amrik-sir_mdxg2x.mp4'} 
+          className="w-1/3 h-full object-cover"
+          autoPlay
+          muted
+          loop
+          playsInline
         />
+        
+        {/* Second video - takes up 1/3 of the height */}
+        <video 
+          src="https://res.cloudinary.com/due7t0ksr/video/upload/v1756146259/Turf-Night-TKN_jz59iy.mp4" 
+          className="w-1/3 h-full object-cover"
+          autoPlay
+          muted
+          loop
+          playsInline
+        />
+        
+        {/* Third video - takes up 1/3 of the height */}
+        <video 
+          src="https://res.cloudinary.com/due7t0ksr/video/upload/v1756146527/Hiring_gymoxo.mp4" 
+          className="w-1/3 h-full object-cover"
+          autoPlay
+          muted
+          loop
+          playsInline
+        />
+        
         {/* The gradient overlay */}
         <div 
           className="absolute inset-0"
