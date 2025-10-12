@@ -26,7 +26,7 @@ function App() {
       e.preventDefault()
       
       // Convert vertical scroll to horizontal scroll
-      const scrollAmount = e.deltaY > 0 ? 100 : -100
+      const scrollAmount = e.deltaY > 0 ? 120 : -120
       container.scrollLeft += scrollAmount
     }
 
